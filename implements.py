@@ -70,6 +70,7 @@ class Ball(Basic):
                 self.dir = -self.dir
                 blocks.remove(block)
                 break
+             
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):
@@ -81,8 +82,7 @@ class Ball(Basic):
         
         if self.rect.top <= 0:
             self.dir = -self.dir
-            
+    
     def alive(self):
-        # ============================================
-        # TODO: Implement a service that returns whether the ball is alive or not
+        return self.rect.top < config.display_dimension[1]
         pass
