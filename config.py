@@ -18,10 +18,8 @@ gameboard_height_coefficient = 3
 
 display_dimension = (600, 800)
 
-
 center_x = display_dimension[0] / 2
 center_y = display_dimension[1] / 2
-
 
 # Setting for paddle
 paddle_color = (242, 242, 0)
@@ -36,9 +34,9 @@ ball_pos = (center_x, paddle_pos[1] - paddle_size[1])
 ball_fever_color = (255, 50, 0)
 ball_size = (20, 20)
 
-
 # Setting for items
 item_size = (20, 20)
+item_speed = 5  # 아이템 이동 속도 추가
 one_more_prob = 0.3
 fever_prob = 0.1
 add_score_prob = 0.1
@@ -52,6 +50,10 @@ add_score_color = (0, 255, 0)
 paddle_long_ratio = 2
 paddle_long_time = 5
 paddle_long_color = (0, 126, 255)
+
+# 아이템 색상 추가
+red_item_color = (255, 0, 0)  # 빨간색 아이템
+blue_item_color = (0, 0, 255)  # 파란색 아이템
 
 colors = [(255, 0, 0), (255, 165, 0), (255, 255, 0)]
 collision_limit = len(colors) - 1
