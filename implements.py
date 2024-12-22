@@ -7,6 +7,8 @@ import config
 import pygame
 from pygame.locals import Rect, K_LEFT, K_RIGHT
 
+# 아이템 리스트 초기화
+items = []
 
 class Basic:
     def __init__(self, color: tuple, speed: int = 0, pos: tuple = (0, 0), size: tuple = (0, 0)):
@@ -23,9 +25,8 @@ class Basic:
         self.rect.move_ip(dx, dy)
         self.center = (self.rect.centerx, self.rect.centery)
 
-
 class Block(Basic):
-    def __init__(self, color: tuple, pos: tuple = (0,0), alive = True):
+    def __init__(self, color: tuple, pos: tuple = (0, 0), alive=True):
         super().__init__(color, 0, pos, config.block_size)
         self.pos = pos
         self.alive = alive
@@ -35,7 +36,6 @@ class Block(Basic):
     
     def collide(self):
         self.alive = False
-
 
 class Paddle(Basic):
     def __init__(self):
@@ -53,7 +53,6 @@ class Paddle(Basic):
         elif event.key == K_RIGHT and self.rect.right < config.display_dimension[0]:
             self.rect.move_ip(self.speed, 0)
 
-
 class Ball(Basic):
     def __init__(self, pos: tuple = config.ball_pos):
         super().__init__(config.ball_color, config.ball_speed, pos, config.ball_size)
@@ -67,10 +66,10 @@ class Ball(Basic):
         for block in blocks:
             if block.alive and self.rect.colliderect(block.rect):
                 block.collide()  
+                create_item(block.rect.center)  # 아이템 생성 호출
                 self.dir = -self.dir
                 blocks.remove(block)
                 break
-             
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):
@@ -85,4 +84,25 @@ class Ball(Basic):
     
     def alive(self):
         return self.rect.top < config.display_dimension[1]
-        pass
+
+class Item(Basic):
+    def __init__(self, color: tuple, pos: tuple = (0, 0)):
+        super().__init__(color, config.item_speed, pos, config.item_size)
+        self.alive_status = True  # 상태를 나타내는 속성으로 변경
+
+    def move(self):
+        self.rect.move_ip(0, self.speed)
+        if self.rect.top > config.display_dimension[1]:
+            self.alive_status = False
+
+    def draw(self, surface):
+        pygame.draw.circle(surface, self.color, self.rect.center, self.rect.width // 2)
+
+    def alive(self):
+        return self.alive_status  # alive_status 반환
+
+def create_item(position):
+    if random.random() < 0.2:  # 20% 확률
+        item_color = random.choice([config.red_item_color, config.blue_item_color])
+        item = Item(item_color, position)
+        items.append(item)  # 아이템 리스트에 추가
