@@ -1,10 +1,10 @@
 import sys
-from implements import Basic, Block, Paddle, Ball
+from implements import Basic, Block, Paddle, Ball, Item, create_item, items
 import config
 
 import pygame
 from pygame.locals import QUIT, Rect, K_ESCAPE, K_SPACE
-
+import random
 
 pygame.init()
 pygame.key.set_repeat(3, 3)
@@ -20,7 +20,6 @@ BALLS = [ball1]
 life = config.life
 start = False
 
-
 def create_blocks():
     for i in range(config.num_blocks[0]):
         for j in range(config.num_blocks[1]):
@@ -34,7 +33,6 @@ def create_blocks():
             color = config.colors[color_index]
             block = Block(color, (x, y))
             BLOCKS.append(block)
-
 
 def tick():
     global life
@@ -52,7 +50,7 @@ def tick():
             if event.key == K_ESCAPE:  # ESC 키가 눌렸을 때
                 pygame.quit()
                 sys.exit()
-            if event.key == K_SPACE:  # space키가 눌려지만 start 변수가 True로 바뀌며 게임 시작
+            if event.key == K_SPACE:  # space키가 눌리면 start 변수가 True로 바뀌며 게임 시작
                 start = True
             paddle.move_paddle(event)
 
@@ -66,9 +64,14 @@ def tick():
         ball.collide_block(BLOCKS)
         ball.collide_paddle(paddle)
         ball.hit_wall()
-        if ball.alive() == False:
+        if not ball.alive():
             BALLS.remove(ball)
 
+    # 아이템 업데이트
+    for item in items:  # items 리스트에서 아이템 업데이트
+        item.move()
+        if not item.alive():
+            items.remove(item)
 
 def main():
     global life
@@ -111,15 +114,18 @@ def main():
             surface.blit(mess_clear, (200, 400))
         else:
             for ball in BALLS:
-                if start == True:
+                if start:
                     ball.move()
                 ball.draw(surface)
             for block in BLOCKS:
                 block.draw(surface)
 
+        # 아이템 그리기
+        for item in items:  # items 리스트에서 아이템 그리기
+            item.draw(surface)
+
         pygame.display.update()
         fps_clock.tick(config.fps)
-
 
 if __name__ == "__main__":
     main()
