@@ -1,6 +1,7 @@
 import sys
 from implements import Basic, Block, Paddle, Ball, Item, create_item, items
 import config
+
 import pygame
 from pygame.locals import QUIT, Rect, K_ESCAPE, K_SPACE
 import random
@@ -41,7 +42,6 @@ def tick():
     global paddle
     global ball1
     global start
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -72,14 +72,6 @@ def tick():
         item.move()
         if not item.alive():
             items.remove(item)
-
-        # 패들과 아이템 충돌 체크
-        if paddle.collide_item(item):
-            if item.color == config.red_item_color:
-                # 빨간색 아이템을 먹었을 때 추가 공 생성
-                new_ball = Ball((paddle.rect.centerx, paddle.rect.top - 20))  # 패들 위에서 발사
-                BALLS.append(new_ball)  # 추가 공을 BALLS 리스트에 추가
-            items.remove(item)  # 아이템 제거
 
 def main():
     global life
