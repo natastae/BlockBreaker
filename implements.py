@@ -1,9 +1,7 @@
 import math
 import random
 import time
-
 import config
-
 import pygame
 from pygame.locals import Rect, K_LEFT, K_RIGHT
 
@@ -52,6 +50,12 @@ class Paddle(Basic):
             self.rect.move_ip(-self.speed, 0)
         elif event.key == K_RIGHT and self.rect.right < config.display_dimension[0]:
             self.rect.move_ip(self.speed, 0)
+
+    def collide_item(self, item):
+        if self.rect.colliderect(item.rect):
+            if item.color == config.red_item_color:  # 빨간색 아이템일 때
+                return True
+        return False
 
 class Ball(Basic):
     def __init__(self, pos: tuple = config.ball_pos):
